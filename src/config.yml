@@ -1,0 +1,11 @@
+general:
+  ##Seconds in a cycle
+  timer: 900
+  ##Location of lobby
+  lobby: 'null'
+  
+spawns:
+  lms: 'null'
+  koth: 'null'
+  
+hilltop: 'null'

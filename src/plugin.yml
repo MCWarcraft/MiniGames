@@ -1,0 +1,25 @@
+name: MiniGames
+main: minigames.MiniGames
+version: 1.0.0
+depend: [CorePlugin]
+
+commands:
+  minigames:
+    description: 'The root command for the MiniGames plugin'
+    usage: '/minigames'
+    permission-message: 'You don''t have <permission>'
+  join:
+    description: 'Join the current minigame'
+    usage: '/join'
+    permission-message: 'You don''t have <permission>'
+    
+permissions:
+  minigames.lobby.set:
+    description: Gives access to /minigames lobby set
+    default: op
+  minigames.spawn.set:
+    description: Gives access to /minigames setspawn <gametype>
+    default: op
+  minigames.start:
+    description: Gives access to /minigames start
+    default: op
