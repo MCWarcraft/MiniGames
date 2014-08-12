@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/bukkit-1.7.2-R0.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Austin/Desktop/CorePlugin.jar"/>
+	<classpathentry kind="lib" path="/media/austin/Media/development/mcserver/bukkit-1.7.2-R0.3.jar"/>
+	<classpathentry kind="lib" path="/media/austin/Media/development/mcserver/CorePlugin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

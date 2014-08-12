@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import core.Event.PlayerZeroHealthEvent;
-import core.HonorPoints.DatabaseOperations;
+import core.HonorPoints.CurrencyOperations;
 import core.Scoreboard.CoreScoreboardManager;
 import core.Scoreboard.DisplayBoard;
 import core.Scoreboard.ScoreboardValue;
@@ -72,27 +72,27 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 				p.sendMessage(ChatColor.AQUA + "You earned:");
 				
 				p.sendMessage(ChatColor.GREEN + "+ 10 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "participation");
-				DatabaseOperations.giveCurrency(p, 10, true);
+				CurrencyOperations.giveCurrency(p, 10, true);
 				
 				//Placing messages
 				if (winnerName.equals(p.getName()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 100 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "1st place");
-					DatabaseOperations.giveCurrency(p, 100, true);
+					CurrencyOperations.giveCurrency(p, 100, true);
 				}
 				
 				//Kill messages
 				if (kills.get(p.getName()) != 0)
 				{
 					p.sendMessage(ChatColor.GREEN + "+ " + kills.get(p.getName()) +" Honor " + ChatColor.GOLD + "for " + ChatColor.RED + kills.get(p.getName()) + " kills");
-					DatabaseOperations.giveCurrency(p, kills.get(p.getName()), true);
+					CurrencyOperations.giveCurrency(p, kills.get(p.getName()), true);
 				}
 				
 				p.sendMessage(ChatColor.AQUA + "-------------");
 			}
 			
 			new EndGameTask(this).runTaskLater(plugin, 60);
-			DatabaseOperations.giveCurrency(Bukkit.getOfflinePlayer(winnerName), 100, true);
+			CurrencyOperations.giveCurrency(Bukkit.getOfflinePlayer(winnerName), 100, true);
 		}
 		else
 			endGamePost();
@@ -137,6 +137,12 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		board.setScoreColor(ChatColor.GOLD);
 		
 		board.setTitle(startGameTask.getTimeString(), "");
+		
+		board.putDivider();
+		
+		board.putHeader(ChatColor.GREEN + "Selected Kit:");
+		board.putField("", kitScoreboardConnector, player.getName());
+		
 		board.putDivider();
 	}
 	

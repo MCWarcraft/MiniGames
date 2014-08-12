@@ -19,7 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import core.Event.PlayerZeroHealthEvent;
-import core.HonorPoints.DatabaseOperations;
+import core.HonorPoints.CurrencyOperations;
 import core.Scoreboard.CoreScoreboardManager;
 import core.Scoreboard.DisplayBoard;
 import core.Scoreboard.GameBoard;
@@ -116,30 +116,30 @@ public class KOTHMiniGame extends MiniGame implements Listener
 				p.sendMessage(ChatColor.AQUA + "You earned:");
 				
 				p.sendMessage(ChatColor.GREEN + "+ 10 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "participation");
-				DatabaseOperations.giveCurrency(p, 10, true);
+				CurrencyOperations.giveCurrency(p, 10, true);
 				
 				//Placing messages
 				if (first.equals(p.getName()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 75 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "1st place");
-					DatabaseOperations.giveCurrency(p, 75, true);
+					CurrencyOperations.giveCurrency(p, 75, true);
 				}
 				else if (second.equals(p.getName()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 50 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "2nd place");
-					DatabaseOperations.giveCurrency(p, 50, true);
+					CurrencyOperations.giveCurrency(p, 50, true);
 				}
 				else if (third.equals(p.getName()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 25 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "3rd place");
-					DatabaseOperations.giveCurrency(p, 25, true);
+					CurrencyOperations.giveCurrency(p, 25, true);
 				}
 				
 				//Kill messages
 				if (kills.get(p.getName()) != 0)
 				{
 					p.sendMessage(ChatColor.GREEN + "+ " + kills.get(p.getName()) +" Honor " + ChatColor.GOLD + "for " + ChatColor.RED + kills.get(p.getName()) + " kills");
-					DatabaseOperations.giveCurrency(p, kills.get(p.getName()), true);
+					CurrencyOperations.giveCurrency(p, kills.get(p.getName()), true);
 				}
 				
 				p.sendMessage(ChatColor.AQUA + "-------------");
@@ -194,6 +194,12 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		board.setScoreColor(ChatColor.GOLD);
 		
 		board.setTitle(startGameTask.getTimeString(), "");
+		
+		board.putDivider();
+		
+		board.putHeader(ChatColor.GREEN + "Selected Kit:");
+		board.putField("", kitScoreboardConnector, player.getName());
+		
 		board.putDivider();
 	}
 

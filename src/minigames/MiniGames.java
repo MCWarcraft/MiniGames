@@ -5,9 +5,11 @@ import java.util.HashMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import core.Save.CoreSavable;
+import core.Save.CoreSaveManager;
 import core.Utilities.LocationParser;
 
-public class MiniGames extends JavaPlugin
+public class MiniGames extends JavaPlugin implements CoreSavable
 {	
 	private MiniGamesOperator miniGamesOperator;
 	
@@ -32,6 +34,8 @@ public class MiniGames extends JavaPlugin
 		getCommand("join").setExecutor(miniGamesExecutor);
 		
 		this.getServer().getPluginManager().registerEvents(new MiniGamesListener(this), this);
+		
+		CoreSaveManager.addSavable(this);
 		
 		getServer().getLogger().info("Minigames enabled");
 	}
@@ -74,5 +78,11 @@ public class MiniGames extends JavaPlugin
 	public HashMap<String, GameType> getGameTypeReverse()
 	{
 		return gameTypeReverse;
+	}
+	
+	@Override
+	public void coreSave()
+	{
+		saveData();
 	}
 }

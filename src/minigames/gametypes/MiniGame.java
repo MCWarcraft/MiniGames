@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import core.Kits.KitLockManager;
+import core.Kits.KitScoreboardConnector;
 import core.Scoreboard.CoreScoreboardManager;
 import core.Utilities.CoreItems;
 import core.Utilities.CoreUtilities;
@@ -24,6 +25,7 @@ public abstract class MiniGame
 
 	protected StartGameTask startGameTask;
 	protected MiniGames plugin;
+	protected KitScoreboardConnector kitScoreboardConnector;
 	
 	protected ArrayList<String> livingPlayers;
 	protected ArrayList<String> deadPlayers;
@@ -34,6 +36,8 @@ public abstract class MiniGame
 		this.spawnLocation = spawnLocation;
 		hasStarted = false;
 		this.plugin = plugin;
+		
+		this.kitScoreboardConnector = new KitScoreboardConnector();
 		
 		livingPlayers = new ArrayList<String>();
 		deadPlayers = new ArrayList<String>();
