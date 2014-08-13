@@ -215,10 +215,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		{
 			//If the game hasn't started yet
 			if (this.hasStarted == false)
-			{
 				event.setCancelled(true);
-				return;
-			}
 			//If the game has started
 			else
 			{
@@ -235,6 +232,9 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 	@EventHandler
 	public void onPlayerDeathEvent(PlayerZeroHealthEvent event)
 	{
+		if (this.hasStarted == false)
+			return;
+		
 		//If the dead player is part of this game
 		if (this.containsPlayer(event.getPlayer().getName()))
 		{

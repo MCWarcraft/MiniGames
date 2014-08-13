@@ -298,6 +298,9 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	@EventHandler
 	public void onPlayerZeroHealth(PlayerZeroHealthEvent event)
 	{
+		if (this.hasStarted == false)
+			return;
+		
 		if (this.getPlayerNames().contains(event.getPlayer().getName()))
 		{
 			hillList.remove(event.getPlayer().getName());
