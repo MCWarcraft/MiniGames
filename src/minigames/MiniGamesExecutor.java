@@ -1,5 +1,7 @@
 package minigames;
 
+import minigames.gametypes.KOTHMiniGame;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -95,7 +97,7 @@ public class MiniGamesExecutor implements CommandExecutor
 				{
 					if (LocationSelector.getSelectedLocation(player.getName()) != null)
 					{
-						operator.setHillTopLocation(LocationSelector.getSelectedLocation(player.getName()));
+						KOTHMiniGame.setHillTopLocation(LocationSelector.getSelectedLocation(player.getName()));
 						player.sendMessage(ChatColor.GREEN + "Hilltop location set.");
 					}
 					else

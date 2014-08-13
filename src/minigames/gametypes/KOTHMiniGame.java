@@ -30,24 +30,23 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	
 	private GameBoard gameBoard;
 	
-	private Location hillTopLocation;
+	private static Location hillTopLocation;
+	private static int hillCheckTicks = 20, victoryScore = 100;
 	
 	private BukkitTask hillCheckTask;
 	
 	private HashMap<String, Integer> kills;
 	
-	public KOTHMiniGame(int playersToStart, Location spawnLocation, Location hillTopLocation, MiniGames plugin)
+	public KOTHMiniGame(int playersToStart, Location spawnLocation, MiniGames plugin)
 	{
 		super(playersToStart, spawnLocation, plugin);
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		
-		this.hillTopLocation = hillTopLocation;
-		
 		points = new HashMap<String, Integer>();
 		hillList = new ArrayList<String>();
 		
-		hillCheckTask = new HillCheckTask(this).runTaskTimer(plugin, 0, 20);
+		hillCheckTask = new HillCheckTask(this).runTaskTimer(plugin, 0, hillCheckTicks);
 		
 		kills = new HashMap<String, Integer>();
 	}
@@ -258,7 +257,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 			gameBoard.setTitle(hillList.get(0));
 			points.put(hillList.get(0), points.get(hillList.get(0)) + 1);
 			gameBoard.setScore(Bukkit.getOfflinePlayer(hillList.get(0)), points.get(hillList.get(0)));
-			if (points.get(hillList.get(0)) == 100)
+			if (points.get(hillList.get(0)) == victoryScore)
 				endGame();
 		}
 		else if (hillList.size() == 0 && this.hasStarted)
@@ -311,5 +310,25 @@ public class KOTHMiniGame extends MiniGame implements Listener
 			if (event.getDamager() != null)
 				kills.put(event.getDamager().getName(), kills.get(event.getDamager().getName()) + 1);
 		}
+	}
+	
+	public static void setHillTopLocation(Location loc)
+	{
+		hillTopLocation = loc;
+	}
+	
+	public static Location getHillTopLocation()
+	{
+		return hillTopLocation;
+	}
+	
+	public static void setHillCheckTicks(int ticks)
+	{
+		hillCheckTicks = ticks;
+	}
+	
+	public static void setVictoryScore(int score)
+	{
+		victoryScore = score;
 	}
 }

@@ -24,7 +24,7 @@ import core.Utilities.CoreUtilities;
 public class MiniGamesOperator
 {
 	private MiniGames plugin;
-	private Location lobbyLocation, hillTopLocation;
+	private Location lobbyLocation;
 	
 	private MiniGameLobbyTask sbTimeTask;
 	private HonorConnector honorConnector;
@@ -143,14 +143,14 @@ public class MiniGamesOperator
 				return;
 			}
 			//If the hilltop isn't set
-			if (hillTopLocation == null)
+			if (KOTHMiniGame.getHillTopLocation() == null)
 			{
 				for (Player p : plugin.getServer().getOnlinePlayers())
 					p.sendMessage(ChatColor.RED + "The KOTH game failed to start. There is no hilltop location.");
 				return;
 			}
 			
-			activeGame = new KOTHMiniGame(3, spawnLocations.get(GameType.KOTH), hillTopLocation, plugin);		
+			activeGame = new KOTHMiniGame(3, spawnLocations.get(GameType.KOTH), plugin);		
 			
 			nextGameType = GameType.LMS;
 		}
@@ -185,16 +185,6 @@ public class MiniGamesOperator
 	public void setSpawnLocation(GameType type, Location loc)
 	{
 		spawnLocations.put(type, loc);
-	}
-	
-	public void setHillTopLocation(Location loc)
-	{
-		this.hillTopLocation = loc;
-	}
-	
-	public Location getHillTopLocation()
-	{
-		return hillTopLocation;
 	}
 	
 	public MiniGame getActiveGame()

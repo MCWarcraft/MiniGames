@@ -9,3 +9,5 @@ spawns:
   koth: 'null'
   
 hilltop: 'null'
+hillticks: 20
+kothscorelimit: 100

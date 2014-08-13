@@ -2,6 +2,8 @@ package minigames;
 
 import java.util.HashMap;
 
+import minigames.gametypes.KOTHMiniGame;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,7 +55,7 @@ public class MiniGames extends JavaPlugin implements CoreSavable
 		for (GameType type : GameType.values())
 			getConfig().set("spawns." + type.toString(), LocationParser.locationToString(miniGamesOperator.getSpawnLocation(type)));
 		
-		getConfig().set("hilltop", LocationParser.locationToString(miniGamesOperator.getHillTopLocation()));
+		getConfig().set("hilltop", LocationParser.locationToString(KOTHMiniGame.getHillTopLocation()));
 		
 		saveConfig();
 	}
@@ -67,7 +69,8 @@ public class MiniGames extends JavaPlugin implements CoreSavable
 			for (String gameTypeName : spawnLocationSection.getKeys(false))
 				miniGamesOperator.setSpawnLocation(gameTypeReverse.get(gameTypeName), LocationParser.parseLocation(spawnLocationSection.getString(gameTypeName)));
 		
-		miniGamesOperator.setHillTopLocation(LocationParser.parseLocation(getConfig().getString("hilltop")));
+		KOTHMiniGame.setHillTopLocation(LocationParser.parseLocation(getConfig().getString("hilltop")));
+		KOTHMiniGame.setHillCheckTicks(getConfig().getInt("hillticks"));
 	}
 	
 	public MiniGamesOperator getMiniGamesOperator()
