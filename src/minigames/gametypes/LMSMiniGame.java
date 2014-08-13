@@ -13,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import core.Event.PlayerZeroHealthEvent;
 import core.HonorPoints.CurrencyOperations;
@@ -246,7 +244,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 			
 			CoreUtilities.resetPlayerState(event.getPlayer(), true);
 			
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 0));
+			CoreUtilities.deathAnimation(event.getPlayer());
 			
 			if (event.getDamager() != null)
 				kills.put(event.getDamager().getName(), kills.get(event.getDamager().getName()) + 1);

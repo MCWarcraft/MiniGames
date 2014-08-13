@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import core.Event.PlayerZeroHealthEvent;
@@ -23,6 +21,7 @@ import core.HonorPoints.CurrencyOperations;
 import core.Scoreboard.CoreScoreboardManager;
 import core.Scoreboard.DisplayBoard;
 import core.Scoreboard.GameBoard;
+import core.Utilities.CoreUtilities;
 
 public class KOTHMiniGame extends MiniGame implements Listener
 {
@@ -303,7 +302,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		{
 			hillList.remove(event.getPlayer().getName());
 			event.getPlayer().setHealth(20);
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 0));
+			CoreUtilities.deathAnimation(event.getPlayer());
 			event.getPlayer().teleport(this.getSpawnLocation());
 			
 			if (event.getDamager() != null)
