@@ -71,6 +71,8 @@ public class MiniGames extends JavaPlugin implements CoreSavable
 		
 		KOTHMiniGame.setHillTopLocation(LocationParser.parseLocation(getConfig().getString("hilltop")));
 		KOTHMiniGame.setHillCheckTicks(getConfig().getInt("hillticks"));
+		KOTHMiniGame.setVictoryScore(getConfig().getInt("kothscorelimit"));
+		KOTHMiniGame.setHillRadius(getConfig().getDouble("hillradius"));
 	}
 	
 	public MiniGamesOperator getMiniGamesOperator()

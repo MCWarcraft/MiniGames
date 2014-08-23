@@ -32,6 +32,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	
 	private static Location hillTopLocation;
 	private static int hillCheckTicks = 20, victoryScore = 100;
+	private static double hillRadius = 8;
 	
 	private BukkitTask hillCheckTask;
 	
@@ -243,7 +244,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	{
 		for (Player p : this.getPlayers())
 		{
-			if (hillTopLocation.distance(p.getLocation()) < 5)
+			if (hillTopLocation.distance(p.getLocation()) < hillRadius)
 			{
 				if (!hillList.contains(p.getName()))
 					hillList.add(p.getName());
@@ -330,5 +331,10 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	public static void setVictoryScore(int score)
 	{
 		victoryScore = score;
+	}
+	
+	public static void setHillRadius(double radius)
+	{
+		hillRadius = radius;
 	}
 }

@@ -10,4 +10,5 @@ spawns:
   
 hilltop: 'null'
 hillticks: 20
+hillradius: 8.0
 kothscorelimit: 100
