@@ -20,6 +20,7 @@ import core.Scoreboard.CoreScoreboardManager;
 import core.Scoreboard.DisplayBoard;
 import core.Scoreboard.ScoreboardValue;
 import core.Utilities.CoreUtilities;
+import core.Utilities.HungerStopper;
 
 public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 {	
@@ -47,7 +48,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		for (Player player : this.getPlayers())
 		{
 			kills.put(player.getName(), 0);
-			
+			HungerStopper.setCanGetHungry(player.getName());
 			generateGameScoreboard(player);
 			CoreScoreboardManager.getDisplayBoard(player).update(true);
 		}

@@ -22,6 +22,7 @@ import core.Scoreboard.CoreScoreboardManager;
 import core.Scoreboard.DisplayBoard;
 import core.Scoreboard.GameBoard;
 import core.Utilities.CoreUtilities;
+import core.Utilities.HungerStopper;
 
 public class KOTHMiniGame extends MiniGame implements Listener
 {
@@ -63,6 +64,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		{
 			points.put(player.getName(), 0);
 			kills.put(player.getName(), 0);
+			HungerStopper.setCanGetHungry(player.getName());
 			CoreScoreboardManager.getDisplayBoard(player).update(true);
 		}
 		

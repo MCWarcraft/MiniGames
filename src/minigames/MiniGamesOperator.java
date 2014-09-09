@@ -76,7 +76,7 @@ public class MiniGamesOperator
 		
 		CoreUtilities.resetPlayerState(player, true);
 		player.getInventory().addItem(CoreItems.COMPASS);
-		player.getInventory().addItem(CoreItems.WATCH);
+		//player.getInventory().addItem(CoreItems.WATCH);
 		player.getInventory().addItem(CoreItems.NETHER_STAR);
 		player.updateInventory();
 		
