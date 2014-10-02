@@ -67,7 +67,7 @@ public class StartGameTask extends BukkitRunnable
 	{
 		for (Player p : plugin.getServer().getOnlinePlayers())
 			//If the player isn't in the game already
-			if (plugin.getMiniGamesOperator().getMinigamePlayers().get(p.getName()) == null)
+			if (plugin.getMiniGamesOperator().getMinigamePlayerUUIDs().get(p.getUniqueId()) == null)
 				p.sendMessage(ChatColor.GOLD + "A " + ChatColor.RED + plugin.getMiniGamesOperator().getActiveGame().getGameName() + ChatColor.GOLD + " game is starting in " + timeToGame + " seconds. Type /join to enter!");
 	}
 

@@ -21,7 +21,7 @@ public class MiniGamesListener implements Listener
 	@EventHandler
 	public void onCustodySwitchEvent(CustodySwitchEvent event)
 	{
-		plugin.getMiniGamesOperator().removePlayer(event.getPlayer().getName());
+		plugin.getMiniGamesOperator().removePlayer(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
@@ -33,14 +33,14 @@ public class MiniGamesListener implements Listener
 		Player player = (Player) event.getEntity();
 		
 		//If the player is in the game
-		if (plugin.getMiniGamesOperator().getPlayerStatus(player.getName()) == MiniGamePlayerStatus.IN_LOBBY)
+		if (plugin.getMiniGamesOperator().getPlayerStatus(player.getUniqueId()) == MiniGamePlayerStatus.IN_LOBBY)
 			event.setCancelled(true);
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void onVoidDamage(PlayerVoidDamageEvent event)
 	{
-		if (plugin.getMiniGamesOperator().getPlayerStatus(event.getPlayer().getName()) == MiniGamePlayerStatus.IN_LOBBY && !event.isUsed())
+		if (plugin.getMiniGamesOperator().getPlayerStatus(event.getPlayer().getUniqueId()) == MiniGamePlayerStatus.IN_LOBBY && !event.isUsed())
 		{
 			plugin.getMiniGamesOperator().bringPlayer(event.getPlayer());
 			event.use();

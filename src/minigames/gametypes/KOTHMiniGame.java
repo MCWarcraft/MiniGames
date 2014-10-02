@@ -2,6 +2,7 @@ package minigames.gametypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import minigames.MiniGames;
 import minigames.tasks.EndGameTask;
@@ -26,8 +27,8 @@ import core.Utilities.HungerStopper;
 
 public class KOTHMiniGame extends MiniGame implements Listener
 {
-	private HashMap<String, Integer> points;
-	private ArrayList<String> hillList;
+	private HashMap<UUID, Integer> points;
+	private ArrayList<UUID> hillList;
 	
 	private GameBoard gameBoard;
 	
@@ -37,7 +38,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	
 	private BukkitTask hillCheckTask;
 	
-	private HashMap<String, Integer> kills;
+	private HashMap<UUID, Integer> kills;
 	
 	public KOTHMiniGame(int playersToStart, Location spawnLocation, MiniGames plugin)
 	{
@@ -45,12 +46,12 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		
-		points = new HashMap<String, Integer>();
-		hillList = new ArrayList<String>();
+		points = new HashMap<UUID, Integer>();
+		hillList = new ArrayList<UUID>();
 		
 		hillCheckTask = new HillCheckTask(this).runTaskTimer(plugin, 0, hillCheckTicks);
 		
-		kills = new HashMap<String, Integer>();
+		kills = new HashMap<UUID, Integer>();
 	}
 
 	@Override
@@ -62,9 +63,9 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		//
 		for (Player player : this.getPlayers())
 		{
-			points.put(player.getName(), 0);
-			kills.put(player.getName(), 0);
-			HungerStopper.setCanGetHungry(player.getName());
+			points.put(player.getUniqueId(), 0);
+			kills.put(player.getUniqueId(), 0);
+			HungerStopper.setCanGetHungry(player.getUniqueId());
 			CoreScoreboardManager.getDisplayBoard(player).update(true);
 		}
 		
@@ -78,30 +79,34 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		
 		if (hasStarted)
 		{
-			String first = null, second = null, third = null;
+			UUID first = null, second = null, third = null;
 			
-			String tempPlayer;
-			String[] scorePlayers = points.keySet().toArray(new String[points.size()]);
+			UUID tempPlayerUUID;
+			UUID[] scorePlayerUUIDs = points.keySet().toArray(new UUID[points.size()]);
 			
-			int n = scorePlayers.length;
+			int n = scorePlayerUUIDs.length;
 			
 	        //Sort entities
 	        for(int i  = 0; i < n; i++)
 	            for(int j = 1; j < (n - i); j++)
-	                if(points.get(scorePlayers[j]) > points.get(scorePlayers[j - 1]))
+	                if(points.get(scorePlayerUUIDs[j]) > points.get(scorePlayerUUIDs[j - 1]))
 	                {
 	                    //swap the elements!
-	                    tempPlayer = scorePlayers[j];
-	                    scorePlayers[j] = scorePlayers[j - 1];
-	                    scorePlayers[j - 1] = tempPlayer;
+	                    tempPlayerUUID = scorePlayerUUIDs[j];
+	                    scorePlayerUUIDs[j] = scorePlayerUUIDs[j - 1];
+	                    scorePlayerUUIDs[j - 1] = tempPlayerUUID;
 	                }
 			
-	        first = scorePlayers[0];
-	        if (scorePlayers.length >= 2)
-	        	second = scorePlayers[1];
-	        if (scorePlayers.length >= 3)
-	        	third = scorePlayers[2];
+	        first = scorePlayerUUIDs[0];
+	        if (scorePlayerUUIDs.length >= 2)
+	        	second = scorePlayerUUIDs[1];
+	        if (scorePlayerUUIDs.length >= 3)
+	        	third = scorePlayerUUIDs[2];
 	        
+	        
+	        String firstName = Bukkit.getPlayer(first).getName(),
+	        		secondName = Bukkit.getPlayer(second).getName(),
+	        		thirdName = Bukkit.getPlayer(third).getName();
 	        
 	        //Send messages and distribute honor
 			for (Player p : this.getPlayers())
@@ -109,9 +114,9 @@ public class KOTHMiniGame extends MiniGame implements Listener
 				p.sendMessage(ChatColor.AQUA + "-------------");
 				p.sendMessage(ChatColor.AQUA + "KOTH RANKINGS");
 				p.sendMessage(ChatColor.AQUA + "-------------");
-				p.sendMessage(ChatColor.RED + "1st: " + ChatColor.GREEN + (first == null ? "Nobody" : first));
-				p.sendMessage(ChatColor.GOLD + "2nd: " + ChatColor.GREEN + (second == null ? "Nobody" : second));
-				p.sendMessage(ChatColor.YELLOW + "3rd: " + ChatColor.GREEN + (third == null ? "Nobody" : third));
+				p.sendMessage(ChatColor.RED + "1st: " + ChatColor.GREEN + (first == null ? "Nobody" : firstName));
+				p.sendMessage(ChatColor.GOLD + "2nd: " + ChatColor.GREEN + (second == null ? "Nobody" : secondName));
+				p.sendMessage(ChatColor.YELLOW + "3rd: " + ChatColor.GREEN + (third == null ? "Nobody" : thirdName));
 				p.sendMessage(ChatColor.AQUA + "-------------");
 			
 				p.sendMessage(ChatColor.AQUA + "You earned:");
@@ -120,27 +125,27 @@ public class KOTHMiniGame extends MiniGame implements Listener
 				CurrencyOperations.giveCurrency(p, 10, true);
 				
 				//Placing messages
-				if (first.equals(p.getName()))
+				if (first.equals(p.getUniqueId()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 75 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "1st place");
 					CurrencyOperations.giveCurrency(p, 75, true);
 				}
-				else if (second.equals(p.getName()))
+				else if (second.equals(p.getUniqueId()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 50 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "2nd place");
 					CurrencyOperations.giveCurrency(p, 50, true);
 				}
-				else if (third.equals(p.getName()))
+				else if (third.equals(p.getUniqueId()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 25 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "3rd place");
 					CurrencyOperations.giveCurrency(p, 25, true);
 				}
 				
 				//Kill messages
-				if (kills.get(p.getName()) != 0)
+				if (kills.get(p.getUniqueId()) != 0)
 				{
-					p.sendMessage(ChatColor.GREEN + "+ " + kills.get(p.getName()) +" Honor " + ChatColor.GOLD + "for " + ChatColor.RED + kills.get(p.getName()) + " kills");
-					CurrencyOperations.giveCurrency(p, kills.get(p.getName()), true);
+					p.sendMessage(ChatColor.GREEN + "+ " + kills.get(p.getUniqueId()) +" Honor " + ChatColor.GOLD + "for " + ChatColor.RED + kills.get(p.getUniqueId()) + " kills");
+					CurrencyOperations.giveCurrency(p, kills.get(p.getUniqueId()), true);
 				}
 				
 				p.sendMessage(ChatColor.AQUA + "-------------");
@@ -199,7 +204,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		board.putDivider();
 		
 		board.putHeader(ChatColor.GREEN + "Selected Kit:");
-		board.putField("", kitScoreboardConnector, player.getName());
+		board.putField("", kitScoreboardConnector, player.getUniqueId().toString());
 		
 		board.putDivider();
 	}
@@ -208,19 +213,19 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	{
 		this.gameBoard = CoreScoreboardManager.getNewGameBoard();
 		for (Player p : this.getPlayers())
-			gameBoard.setScore(p, points.get(p.getName()));
+			gameBoard.setScore(p, points.get(p.getUniqueId()));
 		for (Player p : this.getPlayers())
 			gameBoard.assign(p);
 	}
 
 	@Override
-	public void removePlayer(String playerName)
+	public void removePlayer(UUID playerUUID)
 	{
-		livingPlayers.remove(playerName);
-		deadPlayers.remove(playerName);
-		points.remove(playerName);
-		kills.remove(playerName);
-		hillList.remove(playerName);
+		livingPlayers.remove(playerUUID);
+		deadPlayers.remove(playerUUID);
+		points.remove(playerUUID);
+		kills.remove(playerUUID);
+		hillList.remove(playerUUID);
 		
 		if (this.hasStarted == true)
 			//If the game is over
@@ -248,16 +253,16 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		{
 			if (hillTopLocation.distance(p.getLocation()) < hillRadius)
 			{
-				if (!hillList.contains(p.getName()))
-					hillList.add(p.getName());
+				if (!hillList.contains(p.getUniqueId()))
+					hillList.add(p.getUniqueId());
 			}
 			else
-				hillList.remove(p.getName());
+				hillList.remove(p.getUniqueId());
 		}
 		
 		if (hillList.size() != 0 && this.hasStarted)
 		{
-			gameBoard.setTitle(hillList.get(0));
+			gameBoard.setTitle(Bukkit.getPlayer(hillList.get(0)).getName());
 			points.put(hillList.get(0), points.get(hillList.get(0)) + 1);
 			gameBoard.setScore(Bukkit.getOfflinePlayer(hillList.get(0)), points.get(hillList.get(0)));
 			if (points.get(hillList.get(0)) == victoryScore)
@@ -276,7 +281,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		Player player = (Player) event.getEntity();
 		
 		//If the player is in the game
-		if (this.containsPlayer(player.getName()))
+		if (this.containsPlayer(player.getUniqueId()))
 		{
 			//If the game hasn't started yet
 			if (this.hasStarted == false)
@@ -288,7 +293,7 @@ public class KOTHMiniGame extends MiniGame implements Listener
 			else
 			{
 				//If the player is dead
-				if (deadPlayers.contains(player.getName()))
+				if (deadPlayers.contains(player.getUniqueId()))
 				{
 					event.setCancelled(true);
 					return;
@@ -303,15 +308,15 @@ public class KOTHMiniGame extends MiniGame implements Listener
 		if (this.hasStarted == false)
 			return;
 		
-		if (this.getPlayerNames().contains(event.getPlayer().getName()))
+		if (this.getPlayerUUIDs().contains(event.getPlayer().getUniqueId()))
 		{
-			hillList.remove(event.getPlayer().getName());
+			hillList.remove(event.getPlayer().getUniqueId());
 			event.getPlayer().setHealth(20);
 			CoreUtilities.deathAnimation(event.getPlayer());
 			event.getPlayer().teleport(this.getSpawnLocation());
 			
 			if (event.getDamager() != null)
-				kills.put(event.getDamager().getName(), kills.get(event.getDamager().getName()) + 1);
+				kills.put(event.getDamager().getUniqueId(), kills.get(event.getDamager().getUniqueId()) + 1);
 		}
 	}
 	

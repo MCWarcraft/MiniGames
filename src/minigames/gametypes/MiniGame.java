@@ -1,6 +1,7 @@
 package minigames.gametypes;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import minigames.MiniGamePlayerStatus;
 import minigames.MiniGames;
@@ -27,8 +28,8 @@ public abstract class MiniGame
 	protected MiniGames plugin;
 	protected KitScoreboardConnector kitScoreboardConnector;
 	
-	protected ArrayList<String> livingPlayers;
-	protected ArrayList<String> deadPlayers;
+	protected ArrayList<UUID> livingPlayers;
+	protected ArrayList<UUID> deadPlayers;
 	
 	public MiniGame(int playersToStart, Location spawnLocation, MiniGames plugin)
 	{
@@ -39,8 +40,8 @@ public abstract class MiniGame
 		
 		this.kitScoreboardConnector = new KitScoreboardConnector();
 		
-		livingPlayers = new ArrayList<String>();
-		deadPlayers = new ArrayList<String>();
+		livingPlayers = new ArrayList<UUID>();
+		deadPlayers = new ArrayList<UUID>();
 	}
 	
 	public void startCountdown()
@@ -59,7 +60,7 @@ public abstract class MiniGame
 	
 	public abstract void generateLobbyScoreboard(Player player);
 	
-	public abstract void removePlayer(String playerName);
+	public abstract void removePlayer(UUID playerUUID);
 	
 	public abstract int getPlayersNeeded();
 	
@@ -79,7 +80,7 @@ public abstract class MiniGame
 		if (hasStarted)
 			return;
 		
-		livingPlayers.add(player.getName());
+		livingPlayers.add(player.getUniqueId());
 		
 		if (message)
 		{
@@ -90,9 +91,9 @@ public abstract class MiniGame
 					p.sendMessage(ChatColor.GOLD + "The game can start with " + ChatColor.RED + getPlayersNeeded() + ChatColor.GOLD + " more players.");
 		}
 		
-		plugin.getMiniGamesOperator().setInLobby(player.getName(), MiniGamePlayerStatus.IN_GAME);
+		plugin.getMiniGamesOperator().setInLobby(player.getUniqueId(), MiniGamePlayerStatus.IN_GAME);
 		
-		KitLockManager.setCanEquip(false, player.getName());
+		KitLockManager.setCanEquip(false, player.getUniqueId());
 		
 		CoreUtilities.resetPlayerState(player, true);
 		player.getInventory().addItem(CoreItems.COMPASS);
@@ -114,29 +115,29 @@ public abstract class MiniGame
 	{
 		ArrayList<Player> players = new ArrayList<Player>();
 		
-		for (String playerName : livingPlayers)
-			players.add(Bukkit.getServer().getPlayer(playerName));
-		for (String playerName : deadPlayers)
-			players.add(Bukkit.getServer().getPlayer(playerName));
+		for (UUID playerUUID : livingPlayers)
+			players.add(Bukkit.getServer().getPlayer(playerUUID));
+		for (UUID playerUUID : deadPlayers)
+			players.add(Bukkit.getServer().getPlayer(playerUUID));
 		
 		return players;
 	}
 	
-	public ArrayList<String> getPlayerNames()
+	public ArrayList<UUID> getPlayerUUIDs()
 	{
-		ArrayList<String> players = new ArrayList<String>();
+		ArrayList<UUID> playerUUIDs = new ArrayList<UUID>();
 		
-		for (String playerName : livingPlayers)
-			players.add(playerName);
-		for (String playerName : deadPlayers)
-			players.add(playerName);
+		for (UUID playerUUID : livingPlayers)
+			playerUUIDs.add(playerUUID);
+		for (UUID playerUUID : deadPlayers)
+			playerUUIDs.add(playerUUID);
 		
-		return players;
+		return playerUUIDs;
 	}
 	
-	public boolean containsPlayer(String playerName)
+	public boolean containsPlayer(UUID playerUUID)
 	{
-		if (livingPlayers.contains(playerName) || deadPlayers.contains(playerName))
+		if (livingPlayers.contains(playerUUID) || deadPlayers.contains(playerUUID))
 			return true;
 		return false;
 	}

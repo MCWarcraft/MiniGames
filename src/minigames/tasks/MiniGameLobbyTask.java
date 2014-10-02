@@ -1,6 +1,7 @@
 package minigames.tasks;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import minigames.MiniGamePlayerStatus;
 import minigames.MiniGames;
@@ -36,11 +37,11 @@ public class MiniGameLobbyTask extends BukkitRunnable
 			timeToGame = timerLength;
 		}
 		
-		HashMap<String, MiniGamePlayerStatus> minigamePlayers = plugin.getMiniGamesOperator().getMinigamePlayers();
+		HashMap<UUID, MiniGamePlayerStatus> minigamePlayers = plugin.getMiniGamesOperator().getMinigamePlayerUUIDs();
 		
-		for (String player : minigamePlayers.keySet())
-			if (CoreScoreboardManager.getDisplayBoard(player) != null && minigamePlayers.get(player) == MiniGamePlayerStatus.IN_LOBBY)
-				CoreScoreboardManager.getDisplayBoard(player).setTitle(getTimeString(), "");
+		for (UUID playerUUID : minigamePlayers.keySet())
+			if (CoreScoreboardManager.getDisplayBoard(playerUUID) != null && minigamePlayers.get(playerUUID) == MiniGamePlayerStatus.IN_LOBBY)
+				CoreScoreboardManager.getDisplayBoard(playerUUID).setTitle(getTimeString(), "");
 	}
 
 	public void restartTimer()

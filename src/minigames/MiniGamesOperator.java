@@ -1,6 +1,7 @@
 package minigames;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import minigames.gametypes.KOTHMiniGame;
 import minigames.gametypes.LMSMiniGame;
@@ -29,7 +30,7 @@ public class MiniGamesOperator
 	private MiniGameLobbyTask sbTimeTask;
 	private HonorConnector honorConnector;
 	
-	private HashMap<String, MiniGamePlayerStatus> minigamePlayers;
+	private HashMap<UUID, MiniGamePlayerStatus> minigamePlayers;
 	private MiniGame activeGame;
 	
 	private GameType nextGameType;
@@ -44,7 +45,7 @@ public class MiniGamesOperator
 		
 		honorConnector = new HonorConnector();
 		
-		minigamePlayers = new HashMap<String, MiniGamePlayerStatus>();
+		minigamePlayers = new HashMap<UUID, MiniGamePlayerStatus>();
 		
 		spawnLocations = new HashMap<GameType, Location>();
 		
@@ -67,11 +68,11 @@ public class MiniGamesOperator
 		if (lobbyLocation == null) return false;
 		
 		//If the player is not tracked by the system
-		//if (minigamePlayers.get(player.getName()) == null)
+		//if (minigamePlayers.get(player.getUniqueId()) == null)
 		Custody.switchCustody(player, "mini");
 		
-		setInLobby(player.getName(), MiniGamePlayerStatus.IN_LOBBY);
-		KitLockManager.setCanNotEquip(player.getName());
+		setInLobby(player.getUniqueId(), MiniGamePlayerStatus.IN_LOBBY);
+		KitLockManager.setCanNotEquip(player.getUniqueId());
 		player.teleport(lobbyLocation);
 		
 		CoreUtilities.resetPlayerState(player, true);
@@ -86,12 +87,12 @@ public class MiniGamesOperator
 		return true;
 	}
 	
-	public void removePlayer(String playerName)
+	public void removePlayer(UUID playerUUID)
 	{
-		minigamePlayers.remove(playerName);
+		minigamePlayers.remove(playerUUID);
 		if (activeGame != null)
 		{
-			activeGame.removePlayer(playerName);
+			activeGame.removePlayer(playerUUID);
 		}
 	}
 	
@@ -108,18 +109,18 @@ public class MiniGamesOperator
 		board.putHeader(ChatColor.GREEN + "Next Gametype:");
 		board.putHeader(ChatColor.AQUA + nextGameType.toString().toUpperCase());
 		board.putHeader(ChatColor.GREEN + "Selected Kit:");
-		board.putField("", kitScoreboardConnector, player.getName());
+		board.putField("", kitScoreboardConnector, player.getUniqueId().toString());
 		board.putHeader(ChatColor.GREEN + "Honor Points:");
-		board.putField("", honorConnector, player.getName());
+		board.putField("", honorConnector, player.getUniqueId().toString());
 		board.putDivider();
 		board.update(false);
 	}
 	
 	public void broadcastToLobby(String message)
 	{
-		for (String player : minigamePlayers.keySet())
-			if (plugin.getServer().getPlayer(player) != null && minigamePlayers.get(player) == MiniGamePlayerStatus.IN_LOBBY)
-				plugin.getServer().getPlayer(player).sendMessage(message);
+		for (UUID playerUUID : minigamePlayers.keySet())
+			if (plugin.getServer().getPlayer(playerUUID) != null && minigamePlayers.get(playerUUID) == MiniGamePlayerStatus.IN_LOBBY)
+				plugin.getServer().getPlayer(playerUUID).sendMessage(message);
 	}
 	
 	public void openLobby()
@@ -174,9 +175,9 @@ public class MiniGamesOperator
 		activeGame.startCountdown();
 		
 		//Move players
-		for (String playerName : minigamePlayers.keySet())
-			if (minigamePlayers.get(playerName) == MiniGamePlayerStatus.IN_LOBBY)
-				activeGame.addPlayer(Bukkit.getServer().getPlayer(playerName), false);
+		for (UUID playerUUID : minigamePlayers.keySet())
+			if (minigamePlayers.get(playerUUID) == MiniGamePlayerStatus.IN_LOBBY)
+				activeGame.addPlayer(Bukkit.getServer().getPlayer(playerUUID), false);
 		
 		sbTimeTask.restartTimer();
 
@@ -207,14 +208,14 @@ public class MiniGamesOperator
 		lobbyLocation = loc;
 	}
 	
-	public HashMap<String, MiniGamePlayerStatus> getMinigamePlayers()
+	public HashMap<UUID, MiniGamePlayerStatus> getMinigamePlayerUUIDs()
 	{
 		return minigamePlayers;
 	}
 	
-	public void setInLobby(String playerName, MiniGamePlayerStatus playerStatus)
+	public void setInLobby(UUID playerUUID, MiniGamePlayerStatus playerStatus)
 	{
-		minigamePlayers.put(playerName, playerStatus);
+		minigamePlayers.put(playerUUID, playerStatus);
 	}
 	
 	public Location getSpawnLocation(GameType type)
@@ -222,8 +223,8 @@ public class MiniGamesOperator
 		return spawnLocations.get(type);
 	}
 	
-	public MiniGamePlayerStatus getPlayerStatus(String playerName)
+	public MiniGamePlayerStatus getPlayerStatus(UUID playerUUID)
 	{
-		return minigamePlayers.get(playerName);
+		return minigamePlayers.get(playerUUID);
 	}
 }

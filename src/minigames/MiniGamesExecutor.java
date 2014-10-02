@@ -54,9 +54,9 @@ public class MiniGamesExecutor implements CommandExecutor
 						//If the player is trying to set the lobby and has permission
 						if (args[1].equalsIgnoreCase("set") && player.hasPermission("minigames.lobby.set"))
 						{
-							if (LocationSelector.getSelectedLocation(player.getName()) != null)
+							if (LocationSelector.getSelectedLocation(player.getUniqueId()) != null)
 							{
-								operator.setLobbyLocation(LocationSelector.getSelectedLocation(player.getName()));
+								operator.setLobbyLocation(LocationSelector.getSelectedLocation(player.getUniqueId()));
 								player.sendMessage(ChatColor.GREEN + "Minigames lobby location set.");
 							}
 							else
@@ -76,9 +76,9 @@ public class MiniGamesExecutor implements CommandExecutor
 						//If there is a gamemode of the supplied name
 						if (plugin.getGameTypeReverse().keySet().contains(args[1].toLowerCase()))
 						{
-							if (LocationSelector.getSelectedLocation(player.getName()) != null)
+							if (LocationSelector.getSelectedLocation(player.getUniqueId()) != null)
 							{
-								operator.setSpawnLocation(plugin.getGameTypeReverse().get(args[1].toLowerCase()), LocationSelector.getSelectedLocation(player.getName()));
+								operator.setSpawnLocation(plugin.getGameTypeReverse().get(args[1].toLowerCase()), LocationSelector.getSelectedLocation(player.getUniqueId()));
 								player.sendMessage(ChatColor.GREEN + args[1] + " spawn location set.");
 							}
 							else
@@ -95,9 +95,9 @@ public class MiniGamesExecutor implements CommandExecutor
 				//Else if the player is trying to set the hilltop
 				else if (args[0].equalsIgnoreCase("sethilltop") && player.hasPermission("minigames.spawn.set"))
 				{
-					if (LocationSelector.getSelectedLocation(player.getName()) != null)
+					if (LocationSelector.getSelectedLocation(player.getUniqueId()) != null)
 					{
-						KOTHMiniGame.setHillTopLocation(LocationSelector.getSelectedLocation(player.getName()));
+						KOTHMiniGame.setHillTopLocation(LocationSelector.getSelectedLocation(player.getUniqueId()));
 						player.sendMessage(ChatColor.GREEN + "Hilltop location set.");
 					}
 					else
@@ -123,7 +123,7 @@ public class MiniGamesExecutor implements CommandExecutor
 			{
 				if (!operator.getActiveGame().hasStarted())
 				{
-					if (!operator.getActiveGame().getPlayerNames().contains(player.getName()))
+					if (!operator.getActiveGame().getPlayerUUIDs().contains(player.getUniqueId()))
 						operator.getActiveGame().addPlayer(player, true);
 					else
 						player.sendMessage(ChatColor.RED + "You're already in the game.");

@@ -2,6 +2,7 @@ package minigames.gametypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import minigames.MiniGames;
 import minigames.tasks.EndGameTask;
@@ -24,15 +25,15 @@ import core.Utilities.HungerStopper;
 
 public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 {	
-	private String winnerName;
+	private UUID winnerUUID;
 	
-	private HashMap<String, Integer> kills;
+	private HashMap<UUID, Integer> kills;
 	
 	public LMSMiniGame(int playersToStart, Location spawnLocation, MiniGames plugin)
 	{
 		super(playersToStart, spawnLocation, plugin);
 		
-		kills = new HashMap<String, Integer>();
+		kills = new HashMap<UUID, Integer>();
 		
 		//Register events to this game
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -47,8 +48,8 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		//
 		for (Player player : this.getPlayers())
 		{
-			kills.put(player.getName(), 0);
-			HungerStopper.setCanGetHungry(player.getName());
+			kills.put(player.getUniqueId(), 0);
+			HungerStopper.setCanGetHungry(player.getUniqueId());
 			generateGameScoreboard(player);
 			CoreScoreboardManager.getDisplayBoard(player).update(true);
 		}
@@ -57,7 +58,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 	@Override
 	public void endGame()
 	{		
-		if (winnerName != null)
+		if (winnerUUID != null)
 		{
 	        //Send messages and distribute honor
 			for (Player p : this.getPlayers())
@@ -65,7 +66,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 				p.sendMessage(ChatColor.AQUA + "-------------");
 				p.sendMessage(ChatColor.AQUA + "KOTH RANKINGS");
 				p.sendMessage(ChatColor.AQUA + "-------------");
-				p.sendMessage(ChatColor.RED + "Winner: " + ChatColor.GREEN + winnerName);
+				p.sendMessage(ChatColor.RED + "Winner: " + ChatColor.GREEN + Bukkit.getPlayer(winnerUUID).getName());
 				p.sendMessage(ChatColor.AQUA + "-------------");
 			
 				p.sendMessage(ChatColor.AQUA + "You earned:");
@@ -74,24 +75,24 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 				CurrencyOperations.giveCurrency(p, 10, true);
 				
 				//Placing messages
-				if (winnerName.equals(p.getName()))
+				if (winnerUUID.equals(p.getUniqueId()))
 				{
 					p.sendMessage(ChatColor.GREEN + "+ 100 Honor " + ChatColor.GOLD + "for " + ChatColor.RED + "1st place");
 					CurrencyOperations.giveCurrency(p, 100, true);
 				}
 				
 				//Kill messages
-				if (kills.get(p.getName()) != 0)
+				if (kills.get(p.getUniqueId()) != 0)
 				{
-					p.sendMessage(ChatColor.GREEN + "+ " + kills.get(p.getName()) +" Honor " + ChatColor.GOLD + "for " + ChatColor.RED + kills.get(p.getName()) + " kills");
-					CurrencyOperations.giveCurrency(p, kills.get(p.getName()), true);
+					p.sendMessage(ChatColor.GREEN + "+ " + kills.get(p.getUniqueId()) +" Honor " + ChatColor.GOLD + "for " + ChatColor.RED + kills.get(p.getUniqueId()) + " kills");
+					CurrencyOperations.giveCurrency(p, kills.get(p.getUniqueId()), true);
 				}
 				
 				p.sendMessage(ChatColor.AQUA + "-------------");
 			}
 			
 			new EndGameTask(this).runTaskLater(plugin, 60);
-			CurrencyOperations.giveCurrency(Bukkit.getOfflinePlayer(winnerName), 100, true);
+			CurrencyOperations.giveCurrency(Bukkit.getOfflinePlayer(winnerUUID), 100, true);
 		}
 		else
 			endGamePost();
@@ -140,7 +141,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		board.putDivider();
 		
 		board.putHeader(ChatColor.GREEN + "Selected Kit:");
-		board.putField("", kitScoreboardConnector, player.getName());
+		board.putField("", kitScoreboardConnector, player.getUniqueId().toString());
 		
 		board.putDivider();
 	}
@@ -156,18 +157,18 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		board.putDivider();
 	}
 	
-	public void removePlayer(String playerName)
+	public void removePlayer(UUID playerUUID)
 	{
-		livingPlayers.remove(playerName);
-		deadPlayers.remove(playerName);
-		kills.remove(playerName);
+		livingPlayers.remove(playerUUID);
+		deadPlayers.remove(playerUUID);
+		kills.remove(playerUUID);
 		
 		if (this.hasStarted == true)
 			//If the game is over
 			if (livingPlayers.size() == 1)
 			{
 				//End the game
-				winnerName = livingPlayers.get(0);
+				winnerUUID = livingPlayers.get(0);
 				endGame();
 			}
 		
@@ -176,19 +177,19 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		
 	}
 	
-	private void killPlayer(String playerName)
+	private void killPlayer(UUID playerUUID)
 	{
-		livingPlayers.remove(playerName);
+		livingPlayers.remove(playerUUID);
 		
 		if (this.hasStarted == true)
 		{
-			deadPlayers.add(playerName);
+			deadPlayers.add(playerUUID);
 			
 			//If the game is over
 			if (livingPlayers.size() == 1)
 			{
 				//End the game
-				winnerName = livingPlayers.get(0);
+				winnerUUID = livingPlayers.get(0);
 				endGame();
 			}
 		}
@@ -212,7 +213,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 		Player player = (Player) event.getEntity();
 		
 		//If the player is in the game
-		if (this.containsPlayer(player.getName()))
+		if (this.containsPlayer(player.getUniqueId()))
 		{
 			//If the game hasn't started yet
 			if (this.hasStarted == false)
@@ -221,7 +222,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 			else
 			{
 				//If the player is dead
-				if (deadPlayers.contains(player.getName()))
+				if (deadPlayers.contains(player.getUniqueId()))
 				{
 					event.setCancelled(true);
 					return;
@@ -237,7 +238,7 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 			return;
 		
 		//If the dead player is part of this game
-		if (this.containsPlayer(event.getPlayer().getName()))
+		if (this.containsPlayer(event.getPlayer().getUniqueId()))
 		{
 			//Change visibility
 			for (Player player : this.getPlayers())
@@ -248,9 +249,9 @@ public class LMSMiniGame extends MiniGame implements ScoreboardValue, Listener
 			CoreUtilities.deathAnimation(event.getPlayer());
 			
 			if (event.getDamager() != null)
-				kills.put(event.getDamager().getName(), kills.get(event.getDamager().getName()) + 1);
+				kills.put(event.getDamager().getUniqueId(), kills.get(event.getDamager().getUniqueId()) + 1);
 			
-			killPlayer(event.getPlayer().getName());
+			killPlayer(event.getPlayer().getUniqueId());
 		}
 	}
 
