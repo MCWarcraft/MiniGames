@@ -14,7 +14,7 @@ public class MiniGamesExecutor implements CommandExecutor
 {
 	private MiniGames plugin;
 	private MiniGamesOperator operator;
-	
+
 	public MiniGamesExecutor(MiniGames miniGamesPlugin)
 	{
 		plugin = miniGamesPlugin;
@@ -29,9 +29,9 @@ public class MiniGamesExecutor implements CommandExecutor
 			sender.sendMessage(ChatColor.RED + "Only players can use MiniGames commands.");
 			return true;
 		}
-		
+
 		Player player = (Player) sender;
-		
+
 		//If the root command is minigames
 		if (cmd.getLabel().equalsIgnoreCase("minigames"))
 		{
@@ -121,23 +121,20 @@ public class MiniGamesExecutor implements CommandExecutor
 			//If there's an active game
 			if (operator.getActiveGame() != null)
 			{
-				if (!operator.getActiveGame().hasStarted())
-				{
-					if (!operator.getActiveGame().getPlayerUUIDs().contains(player.getUniqueId()))
-						operator.getActiveGame().addPlayer(player, true);
-					else
-						player.sendMessage(ChatColor.RED + "You're already in the game.");
-				}
-				else
-					player.sendMessage(ChatColor.RED + "The current game is already in progress.");
+				//If the player isn't in it
+				if (!operator.getActiveGame().getPlayerUUIDs().contains(player.getUniqueId()))
+					operator.getActiveGame().addPlayer(player, true);
 			}
-			//If there's no active game
+			//If there isn't an active game in progress or there is a game that is already going
 			else
-				player.sendMessage(ChatColor.RED + "There is no active game.");
-			
+			{
+				if (!operator.bringPlayer(player))
+					player.sendMessage(ChatColor.RED + "The nexus has not been set.");
+			}
+
 			return true;
 		}
-		
+
 		return false;
 	}
 }

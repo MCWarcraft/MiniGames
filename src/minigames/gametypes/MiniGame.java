@@ -12,11 +12,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import core.Kits.EquippableKitConnector;
 import core.Kits.KitLockManager;
 import core.Kits.KitScoreboardConnector;
 import core.Scoreboard.CoreScoreboardManager;
-import core.Utilities.CoreItems;
-import core.Utilities.CoreUtilities;
 
 public abstract class MiniGame
 {	
@@ -74,7 +73,7 @@ public abstract class MiniGame
 		return getPlayersNeeded() == 0;
 	}
 	
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	public void addPlayer(Player player, boolean message)
 	{
 		if (hasStarted)
@@ -95,11 +94,13 @@ public abstract class MiniGame
 		
 		KitLockManager.setCanEquip(false, player.getUniqueId());
 		
-		CoreUtilities.resetPlayerState(player, true);
+		/*CoreUtilities.resetPlayerState(player, true);
 		player.getInventory().addItem(CoreItems.COMPASS);
 		player.getInventory().addItem(CoreItems.WATCH);
 		player.getInventory().addItem(CoreItems.NETHER_STAR);
-		player.updateInventory();
+		player.updateInventory();*/
+		
+		EquippableKitConnector.equipSelectedKit(player);
 		
 		player.teleport(spawnLocation);
 		generateLobbyScoreboard(player);
