@@ -46,26 +46,22 @@ public class MiniGamesExecutor implements CommandExecutor
 			else if (args.length >= 1)
 			{
 				//If the player is dealing with the lobby
-				if (args[0].equalsIgnoreCase("lobby"))
+				if (args[0].equalsIgnoreCase("lobby") && player.hasPermission("minigames.lobby.set"))
 				{
 					//If there are enough args
-					if (args.length == 2)
+					if (args.length == 1)
 					{
-						//If the player is trying to set the lobby and has permission
-						if (args[1].equalsIgnoreCase("set") && player.hasPermission("minigames.lobby.set"))
+						if (LocationSelector.getSelectedLocation(player.getUniqueId()) != null)
 						{
-							if (LocationSelector.getSelectedLocation(player.getUniqueId()) != null)
-							{
-								operator.setLobbyLocation(LocationSelector.getSelectedLocation(player.getUniqueId()));
-								player.sendMessage(ChatColor.GREEN + "Minigames lobby location set.");
-							}
-							else
-								player.sendMessage(ChatColor.RED + "You need to select a location with the stick");
+							operator.setLobbyLocation(LocationSelector.getSelectedLocation(player.getUniqueId()));
+							player.sendMessage(ChatColor.GREEN + "Minigames lobby location set.");
 						}
+						else
+							player.sendMessage(ChatColor.RED + "You need to select a location with the stick");
 					}
 					//If there isn't the right number of arguments
 					else
-						player.sendMessage(ChatColor.RED + "All lobby commands take 2 arguments");
+						player.sendMessage(ChatColor.RED + "/minigames setlobby");
 				}
 				//
 				else if (args[0].equalsIgnoreCase("setspawn") && player.hasPermission("minigames.spawn.set"))

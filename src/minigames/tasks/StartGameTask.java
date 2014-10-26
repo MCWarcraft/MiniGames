@@ -1,5 +1,8 @@
 package minigames.tasks;
 
+import java.util.Arrays;
+import java.util.List;
+
 import minigames.MiniGames;
 import minigames.gametypes.MiniGame;
 
@@ -15,13 +18,13 @@ public class StartGameTask extends BukkitRunnable
 	
 	private int timeToGame;
 	
-	//private static List<Integer> broadcastTimes = Arrays.asList(50, 40, 30, 20, 10);
+	private static List<Integer> broadcastTimes = Arrays.asList(30, 10);
 	
 	public StartGameTask(MiniGames plugin)
 	{
 		this.plugin = plugin;
-		timeToGame = 10;
-		broadcastStart();
+		timeToGame = 30;
+		//broadcastStart();
 		updateScoreboards();
 	}
 	
@@ -31,12 +34,10 @@ public class StartGameTask extends BukkitRunnable
 		
 		if (timeToGame >= 1)
 		{
-			/*
 			if (broadcastTimes.contains(timeToGame))
 			{
 				broadcastStart();
 			}
-			*/
 			updateScoreboards();
 			timeToGame--;
 		 }

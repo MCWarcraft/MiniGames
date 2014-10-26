@@ -104,9 +104,9 @@ public class KOTHMiniGame extends MiniGame implements Listener
 	        	third = scorePlayerUUIDs[2];
 	        
 	        
-	        String firstName = Bukkit.getPlayer(first).getName(),
-	        		secondName = Bukkit.getPlayer(second).getName(),
-	        		thirdName = Bukkit.getPlayer(third).getName();
+	        String firstName = (Bukkit.getPlayer(first) == null) ? "Nobody" : Bukkit.getPlayer(first).getName(),
+	        		secondName = (Bukkit.getPlayer(second) == null) ? "Nobody" : Bukkit.getPlayer(second).getName(),
+	        		thirdName = (Bukkit.getPlayer(third) == null) ? "Nobody" : Bukkit.getPlayer(third).getName();
 	        
 	        //Send messages and distribute honor
 			for (Player p : this.getPlayers())
