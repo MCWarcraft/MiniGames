@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import core.Custody.Custody;
+import core.EngagementTracker.PlayerEngageListener;
 import core.Utilities.LocationSelector;
 
 public class MiniGamesExecutor implements CommandExecutor
@@ -39,9 +40,18 @@ public class MiniGamesExecutor implements CommandExecutor
 			//If there are no extra arguments
 			if (args.length == 0)
 			{
-				//If the player can't be brought successfully
-				if (!operator.bringPlayer(player))
-					player.sendMessage(ChatColor.RED + "The nexus has not been set.");
+				if (!PlayerEngageListener.isEngaged(player.getUniqueId()))
+				{
+					//If the player can't be brought successfully
+					if (!operator.bringPlayer(player))
+						player.sendMessage(ChatColor.RED + "The nexus has not been set.");
+				}
+				else
+					sender.sendMessage(ChatColor.RED + "You cannot use " +
+							ChatColor.GOLD + "/minigames " +
+							ChatColor.RED + "for another " +
+							ChatColor.GREEN + PlayerEngageListener.getSecondsToDisengage(player.getUniqueId()) + 
+							ChatColor.RED + " seconds!");	
 			}
 			//If there are some args supplied
 			else if (args.length >= 1)
@@ -115,21 +125,30 @@ public class MiniGamesExecutor implements CommandExecutor
 		//If the root command is join
 		if (cmd.getLabel().equalsIgnoreCase("join"))
 		{
-			//If there's an active game
-			if (operator.getActiveGame() != null)
+			if (!PlayerEngageListener.isEngaged(player.getUniqueId()))
 			{
-				Custody.switchCustody(player, "ffa");
-				
-				//If the player isn't in it
-				if (!operator.getActiveGame().getPlayerUUIDs().contains(player.getUniqueId()))
-					operator.getActiveGame().addPlayer(player, true);
+				//If there's an active game
+				if (operator.getActiveGame() != null)
+				{
+					Custody.switchCustody(player, "ffa");
+
+					//If the player isn't in it
+					if (!operator.getActiveGame().getPlayerUUIDs().contains(player.getUniqueId()))
+						operator.getActiveGame().addPlayer(player, true);
+				}
+				//If there isn't an active game in progress or there is a game that is already going
+				else
+				{
+					if (!operator.bringPlayer(player))
+						player.sendMessage(ChatColor.RED + "The nexus has not been set.");
+				}
 			}
-			//If there isn't an active game in progress or there is a game that is already going
 			else
-			{
-				if (!operator.bringPlayer(player))
-					player.sendMessage(ChatColor.RED + "The nexus has not been set.");
-			}
+				sender.sendMessage(ChatColor.RED + "You cannot use " +
+						ChatColor.GOLD + "/join " +
+						ChatColor.RED + "for another " +
+						ChatColor.GREEN + PlayerEngageListener.getSecondsToDisengage(player.getUniqueId()) + 
+						ChatColor.RED + " seconds!");
 
 			return true;
 		}
