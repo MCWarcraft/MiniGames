@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import core.Custody.Custody;
 import core.Utilities.LocationSelector;
 
 public class MiniGamesExecutor implements CommandExecutor
@@ -117,6 +118,8 @@ public class MiniGamesExecutor implements CommandExecutor
 			//If there's an active game
 			if (operator.getActiveGame() != null)
 			{
+				Custody.switchCustody(player, "ffa");
+				
 				//If the player isn't in it
 				if (!operator.getActiveGame().getPlayerUUIDs().contains(player.getUniqueId()))
 					operator.getActiveGame().addPlayer(player, true);
